@@ -1,17 +1,23 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  const token = req.headers.authoriztion;
-
+  const token = req.headers.authorization;
+  console.log('Authorization Header:', token);
   if (!token) {
     return res.status(401).json({ message: 'token required' });
   }
 
-  jwt.verify(token, process.env.SECRET || 'shh', (err, decodedToken) => {
+  const tokenWithoutBearer = token.startsWith('Bearer ') ? token.slice(7) : token;
+
+
+  const secret = process.env.SECRET || 'shh';
+  jwt.verify(tokenWithoutBearer, secret, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: 'token invalie' });
+      console.log('Token verification failed:', err)
+      return res.status(401).json({ message: 'token invalid' });
     } else {
-      req.decodedToken = decodedToken;
+      console.log('Decoded JWT:', decoded)
+      req.decodedJwt = decoded;
       next();
     }
   });

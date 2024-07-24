@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../users/users-model')
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -17,7 +17,7 @@ router.post('/register', async (req, res, next) => {
     const newUser = await Users.add({ username, password: hash });
     res.status(201).json(newUser);
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: 'Error registering user' });
   }
   /*
     IMPLEMENT
@@ -46,7 +46,7 @@ router.post('/register', async (req, res, next) => {
   */
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -61,7 +61,7 @@ router.post('/login', async (req, res, next) => {
       res.status(401).json({ message: 'invalid credentials' });
     }
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: 'Error logging in' });
   }
   /*
     IMPLEMENT
