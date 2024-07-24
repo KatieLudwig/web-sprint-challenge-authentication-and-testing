@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ username: 'username and password' });
+      return res.status(400).json({ username: 'username and password required' });
     }
 
     const user = await Users.findBy({ username }).first();
